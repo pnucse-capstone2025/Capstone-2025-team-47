@@ -72,29 +72,12 @@ AWS 환경에서 발생하는 보안 위협을 효과적으로 탐지하고 대�
 
 ### 3.1. 시스템 구성도
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   CloudTrail    │───▶│   EventBridge    │───▶│     Lambda      │
-│  (이벤트 수집)   │    │  (실시간 전송)   │    │  (이상 탐지)    │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                                         │
-                                                         ▼
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│     S3          │◀───│  SageMaker       │◀───│   DynamoDB      │
-│ (모델 저장소)    │    │ (모델 학습)      │    │ (이벤트 저장)   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       ▲
-         │              ┌──────────────────┐
-         └─────────────▶│ Step Functions   │
-                        │ (파이프라인 관리) │
-                        └──────────────────┘
+![alt text](/docs/04.사진/image-3.png)
 
-[웹 서비스 인터페이스]
-┌─────────────────┐    ┌──────────────────┐
-│  React Frontend │◀──▶│ FastAPI Backend  │
-│   (대시보드)     │    │   (API 서버)     │
-└─────────────────┘    └──────────────────┘
-```
+![alt text](/docs/04.사진/image.png)
+
+![alt text](/docs/04.사진/image-5.png)
+
 
 ### 3.2. 사용 기술
 
@@ -111,8 +94,7 @@ AWS 환경에서 발생하는 보안 위협을 효과적으로 탐지하고 대�
 - Doc2Vec: 행동 시퀀스 임베딩
 - One-Class SVM: 초기 세션 이상 탐지
 - DBSCAN: 전체 세션 군집화 및 이상 탐지
-- scikit-learn: 머신러닝 모델 구현
-- gensim: 자연어 처리 및 임베딩
+
 
 **웹 서비스:**
 - FastAPI: 백엔드 API 서버
@@ -171,38 +153,37 @@ AWS 환경에서 발생하는 보안 위협을 효과적으로 탐지하고 대�
 - 기능: 이상 탐지 결과 시각화, 사용자별 위험 점수 트렌드 분석
 - 지원: 초기 세션/전체 세션 구분, 필터링 및 정렬 기능
 
-### 4.3. 디렉토리 구조
+### 4.3. 디렉토리 구조 (수정 필요)
 
 ```
-UEBA-System/
-├── backend/                    # FastAPI 백엔드
-│   ├── app/
-│   │   ├── main.py            # FastAPI 애플리케이션 엔트리포인트
-│   │   ├── models.py          # SQLAlchemy 데이터 모델
-│   │   ├── routers/           # API 라우터
-│   │   └── services/          # 비즈니스 로직
-│   └── requirements.txt       # Python 의존성
-├── frontend/                   # React 프론트엔드
-│   ├── src/
-│   │   ├── pages/            # 페이지 컴포넌트
-│   │   ├── components/       # 재사용 가능한 컴포넌트
-│   │   └── services/         # API 호출 서비스
-│   ├── package.json          # Node.js 의존성
-│   └── vite.config.js        # Vite 설정
-├── terraform/                  # IaC 코드
-│   ├── main.tf               # 메인 Terraform 설정
-│   ├── variables.tf          # 변수 정의
-│   └── modules/              # 재사용 가능한 모듈
-├── lambda/                     # Lambda 함수 코드
-│   ├── event_processor.py    # 이벤트 처리
-│   ├── anomaly_detector.py   # 이상 탐지
-│   └── model_trainer.py      # 모델 학습
-├── sagemaker/                  # SageMaker 처리 코드
-│   ├── training/             # 모델 학습 스크립트
-│   └── processing/           # 데이터 전처리 스크립트
-└── docs/                       # 문서
-    ├── setup_guide.md        # 설치 가이드
-    └── api_documentation.md  # API 문서
+CAPSTONE-2025-TEAM-47/
+├── README.md                # 프로젝트 개요와 실행 방법, 주요 기능 설명 문서
+├── backend/                 # FastAPI 기반 백엔드 서버 관련 코드 및 DB
+│   ├── app/                 # 백엔드 핵심 애플리케이션 코드 (API, 모델, 서비스 로직 등)
+│   ├── requirements.txt     # 백엔드 의존성(Python 패키지) 목록
+│   └── ueba_system.db       # SQLite DB 파일 (개발/테스트용 로컬 데이터 저장)
+├── docs/                    # 프로젝트 문서 자료 모음
+│   ├── 01.보고서/           # 최종/중간/착수 보고서 문서 파일
+│   ├── 02.포스터/           # 발표용 포스터 PPT
+│   ├── 03.발표자료/         # 발표용 PPT 프레젠테이션 자료
+│   └── 04.사진/             # 시연 캡처, 프로젝트 관련 사진
+└── frontend/                # React + Vite 기반 프론트엔드 코드
+    ├── eslint.config.js     # ESLint 설정 파일 (코드 품질 검사 규칙)
+    ├── index.html           # SPA 엔트리 포인트 HTML
+    ├── package-lock.json    # 설치된 프론트엔드 패키지의 고정 버전 관리
+    ├── package.json         # 프론트엔드 프로젝트 메타데이터 및 의존성 목록
+    ├──src/                 # 프론트엔드 소스 코드 (React 컴포넌트, 페이지, 스타일 등)
+    ├──vite.config.js       # Vite 빌드/개발 서버 설정 파일
+    └── public/              # 정적 파일 저장소
+         ├── UEBA.zip                 # 전체 UEBA 프로젝트 관련 리소스/코드 압축본
+         ├── processing_container.zip  # 데이터 처리(배치/분석) 컨테이너 관련 코드/설정 압축본
+         ├── realtime_container.zip    # 실시간 처리 컨테이너 관련 코드/설정 압축본
+         ├── step1.png                
+         ├── step4.png                
+         ├── step4-1.png              
+         ├── step4-2.png              
+         ├── step5.png                
+         └── vite.svg                  # Vite 로고 (프론트엔드 빌드 도구 관련 정적 이미지)
 ```
 
 ### 4.4. 산업체 멘토링 의견 및 반영 사항
@@ -231,9 +212,6 @@ UEBA-System/
 # 프로젝트 다운로드
 git clone https://github.com/your-repo/ueba-system.git
 cd ueba-system
-
-# 자동 설치 스크립트 실행 (Ubuntu 20.04)
-./install_and_build.sh
 ```
 
 **AWS 인프라 배포:**
@@ -268,7 +246,6 @@ npm run dev
 **접속 정보:**
 - 백엔드 API: http://localhost:8000
 - 프론트엔드: http://localhost:5173
-- API 문서: http://localhost:8000/docs
 
 ### 5.2. 오류 발생 시 해결 방법
 
@@ -304,14 +281,10 @@ python -c "from app.database import engine; print(engine.url)"
 ## 6. 소개 자료 및 시연 영상
 
 ### 6.1. 프로젝트 소개 자료
-- [프로젝트 발표 자료](docs/presentation.pdf)
-- [시스템 아키텍처 다이어그램](docs/architecture.png)
-- [연구 논문](docs/research_paper.pdf)
+- [프로젝트 발표 자료](/docs/03.발표자료/발표자료.pptx)
 
-### 6.2. 시연 영상
-- [전체 시스템 데모](https://youtube.com/demo-video)
-- [실시간 이상 탐지 시연](https://youtube.com/realtime-detection)
-- [대시보드 기능 소개](https://youtube.com/dashboard-demo)
+### 6.2. 시연 영상(수정 필요)
+- [발표 영상 주소](https://youtube.com/demo-video)
 
 주요 시연 내용:
 - Terraform을 통한 원클릭 AWS 인프라 배포
@@ -344,7 +317,7 @@ python -c "from app.database import engine; print(engine.url)"
 "UEBA라는 새로운 분야에 도전하며 머신러닝 모델의 실제 적용 과정을 경험할 수 있었습니다. 특히 초기 세션과 전체 세션을 구분한 차별화된 접근 방식을 개발하면서, 도메인 지식의 중요성을 깊이 이해하게 되었습니다. 실제 성능 평가에서 F1-score 96%를 달성한 것은 큰 성취감을 주었습니다."
 
 **심여준**: 
-"서버리스 아키텍처와 IaC를 활용한 클라우드 네이티브 시스템 구축 경험이 매우 valuable했습니다. EventBridge와 CloudTrail의 지연시간 이슈를 해결하는 과정에서 AWS 서비스 간의 특성을 깊이 이해할 수 있었고, Terraform을 통한 인프라 자동화의 중요성을 체감했습니다."
+"서버리스 아키텍처와 IaC를 활용한 클라우드 네이티브 시스템 구축 경험이 매우 흥미로웠습니다. EventBridge와 CloudTrail의 지연시간 이슈를 해결하는 과정에서 AWS 서비스 간의 특성을 깊이 이해할 수 있었고, Terraform을 통한 인프라 자동화의 중요성을 체감했습니다."
 
 **유지호**: 
 "보안 도메인의 복잡한 데이터를 사용자 친화적인 웹 인터페이스로 구현하는 과정이 도전적이었습니다. 특히 실시간 이상 탐지 결과를 시각화하고, AWS 자격증명 관리 기능을 안전하게 구현하면서 보안과 사용성 사이의 균형을 맞추는 법을 배웠습니다."
